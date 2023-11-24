@@ -1,5 +1,7 @@
+import 'package:assignment_project/features/authentication/presentation/cubit/auth_cubit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -17,17 +19,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      backgroundColor: UIcolors.appWhiteBackground,
-      appBar: buildAppBar(),
-      endDrawer: buildEndDrawer(),
-      body: buildBody(),
-    );
-  }
 
   AppBar buildAppBar() {
     return AppBar(
@@ -149,8 +140,9 @@ class _HomeScreenState extends State<HomeScreen> {
     return GestureDetector(
       onTap: () {
         if (screen != null) {
+          Navigator.pop(context);
           final route = CupertinoPageRoute(builder: (context) => screen);
-          Navigator.pushReplacement(context, route);
+          Navigator.push(context, route);
         }
       },
       child: Padding(
@@ -165,7 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 color: UIcolors.appSoftGray,
               ),
             80.horizontalSpace,
-            Icon(Icons.chevron_right, color: UIcolors.appSoftGray),
+           const Icon(Icons.chevron_right, color: UIcolors.appSoftGray),
           ],
         ),
       ),
@@ -181,7 +173,9 @@ class _HomeScreenState extends State<HomeScreen> {
         width: 10,
         backgroundColor: Colors.red,
         text: "Logout",
-        onPressed: () {},
+        onPressed: () {
+          context.read<AuthCubit>().logout();
+        },
       ),
     );
   }
@@ -206,28 +200,21 @@ class _HomeScreenState extends State<HomeScreen> {
       ],
     );
   }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      key: _scaffoldKey,
+      backgroundColor: UIcolors.appWhiteBackground,
+      appBar: buildAppBar(),
+      endDrawer: buildEndDrawer(),
+      body: buildBody(),
+    );
+  }
 }
 
 class TopHomeSection extends StatelessWidget {
   const TopHomeSection({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView(
-      shrinkWrap: true,
-      physics: ClampingScrollPhysics(),
-      padding: EdgeInsets.symmetric(horizontal: 20),
-      children: [
-        _buildMainBanner(),
-        10.verticalSpace,
-        _buildSecondaryBanner(),
-        10.verticalSpace,
-        _buildTertiaryBanner(),
-        15.verticalSpace,
-        _buildSearchSection(),
-      ],
-    );
-  }
 
   SizedBox _buildMainBanner() {
     return SizedBox(
@@ -444,26 +431,24 @@ class TopHomeSection extends StatelessWidget {
                     ),
                     5.verticalSpace,
                     const Text(
-                            "Kamu dapat mengecek\nprogress pemeriksaanmu disini")
+                            "Kamu dapat mengecek\nprogress pemeriksaanmu\ndisini")
                         .toMedium(
                             fontSize: 14,
                             color: UIcolors.appSoftPrimary,
                             fontWeight: FontWeight.w400),
                     10.verticalSpace,
-                    Container(
-                        padding: EdgeInsets.only(top: 10),
-                        child: Row(
-                          children: [
-                            Text("Track").toMedium(
-                                fontWeight: FontWeight.w600,
-                                color: UIcolors.appPrimary),
-                            10.horizontalSpace,
-                            Icon(
-                              Icons.arrow_forward_outlined,
-                              color: UIcolors.appPrimary,
-                            )
-                          ],
-                        ))
+                    Row(
+                      children: [
+                        Text("Track").toMedium(
+                            fontWeight: FontWeight.w600,
+                            color: UIcolors.appPrimary),
+                        10.horizontalSpace,
+                        Icon(
+                          Icons.arrow_forward_outlined,
+                          color: UIcolors.appPrimary,
+                        )
+                      ],
+                    )
                   ],
                 ),
               ],
@@ -473,12 +458,10 @@ class TopHomeSection extends StatelessWidget {
               alignment: Alignment.topLeft,
               child: Padding(
                 padding: const EdgeInsets.only(
-                  left: 35,
+                  left: 20,
                   top: 25,
                 ),
-                child: SvgPicture.asset(
-                  "assets/svg/search_icon.svg",
-                ),
+                child: Image.asset("assets/png/search_icon.png", height: 100,),
               )),
         ],
       ),
@@ -537,6 +520,24 @@ class TopHomeSection extends StatelessWidget {
       ],
     );
   }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      shrinkWrap: true,
+      physics: ClampingScrollPhysics(),
+      padding: EdgeInsets.symmetric(horizontal: 20),
+      children: [
+        _buildMainBanner(),
+        10.verticalSpace,
+        _buildSecondaryBanner(),
+        10.verticalSpace,
+        _buildTertiaryBanner(),
+        15.verticalSpace,
+        _buildSearchSection(),
+      ],
+    );
+  }
 }
 
 class BottomHomeSection extends StatefulWidget {
@@ -547,11 +548,6 @@ class BottomHomeSection extends StatefulWidget {
 }
 
 class _BottomHomeSectionState extends State<BottomHomeSection> {
-  int selectedProductIndex = 0;
-  int selectedServiceIndex = 0;
-
-  final List<String> tabTitles = ["All Product", "Layanan Kesehatan", "Alat Kesehatan"];
-
   final List<HealthServiceModel> healthServiceModels = [
     HealthServiceModel(
       serviceName: "PCR Swab Test (Drive Thru)Hasil 1 Hari Kerja",
@@ -569,21 +565,9 @@ class _BottomHomeSectionState extends State<BottomHomeSection> {
     ),
   ];
 
-  @override
-  Widget build(BuildContext context) {
-    return ListView(
-      padding: const EdgeInsets.only(top: 20),
-      shrinkWrap: true,
-      physics: const ClampingScrollPhysics(),
-      children: [
-        buildTabTitles(),
-        buildProductList(),
-        buildServiceTypeSelection(),
-        buildHealthServiceList(),
-        buildFooterBanner(),
-      ],
-    );
-  }
+  int selectedProductIndex = 0;
+  int selectedServiceIndex = 0;
+  final List<String> tabTitles = ["All Product", "Layanan Kesehatan", "Alat Kesehatan"];
 
   Widget buildTabTitles() {
     return SingleChildScrollView(
@@ -751,16 +735,23 @@ class _BottomHomeSectionState extends State<BottomHomeSection> {
 
   Widget buildServiceTypeSelection() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        15.verticalSpace,
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          child: Text("Pilih Tipe Layanan Kesehatan Anda").toMedium(
+            color: UIcolors.appPrimary
+          ),
+        ),
         buildServiceTypeContainer(),
+           20.verticalSpace,
       ],
     );
   }
 
   Widget buildServiceTypeContainer() {
     return Container(
-      margin: EdgeInsets.only(left: 20, top: 20, right: 100.w),
+      margin: EdgeInsets.only(left: 20, top: 10, right: 100.w),
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
@@ -783,25 +774,17 @@ class _BottomHomeSectionState extends State<BottomHomeSection> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         buildServiceTypeItem("Satuan"),
-        buildServiceTypeItem("Paket Pemeriksaan"),
+        buildServiceTypeItem("Paket Pemeriksaan", color: UIcolors.appWhite),
       ],
     );
   }
 
-  Widget buildServiceTypeItem(String text) {
+  Widget buildServiceTypeItem(String text, {Color? color}) {
     return Container(
       padding: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
       margin: EdgeInsets.only(right: 10, bottom: 3, top: 3, left: 3).r,
       decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            offset: const Offset(-2, 5),
-            blurRadius: 5,
-            spreadRadius: 0.1,
-            color: UIcolors.appSoftGray.withOpacity(0.3),
-          )
-        ],
-        color: UIcolors.appBlue,
+        color: color ?? UIcolors.appBlue,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Text(text).toMedium(
@@ -909,16 +892,26 @@ class _BottomHomeSectionState extends State<BottomHomeSection> {
       child: Image.asset("assets/png/banner_footer.png", fit: BoxFit.fitWidth),
     );
   }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      padding: const EdgeInsets.only(top: 20),
+      shrinkWrap: true,
+      physics: const ClampingScrollPhysics(),
+      children: [
+        buildTabTitles(),
+        buildProductList(),
+        buildServiceTypeSelection(),
+        buildHealthServiceList(),
+        buildFooterBanner(),
+      ],
+    );
+  }
 }
 
 
 class HealthServiceModel {
-  final String serviceName;
-  final String servicePrice;
-  final String serviceHospitalName;
-  final String serviceLocation;
-  final String imageUrl;
-
   HealthServiceModel(
       {required this.serviceName,
       required this.servicePrice,
@@ -926,4 +919,10 @@ class HealthServiceModel {
       required this.serviceLocation,
       required this.imageUrl
       });
+
+  final String imageUrl;
+  final String serviceHospitalName;
+  final String serviceLocation;
+  final String serviceName;
+  final String servicePrice;
 }

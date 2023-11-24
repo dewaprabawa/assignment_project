@@ -4,15 +4,15 @@ import 'package:assignment_project/features/authentication/domain/repository/aut
 import 'package:dartz/dartz.dart';
 
 class AuthUseCase {
-  final AuthRepository repository;
+  final AuthRepository _repository;
 
-  AuthUseCase({required this.repository});
+  AuthUseCase(this._repository);
 
   Future<Either<Failure, UserEntity>> registerUser(String email, String password) async {
-    return await repository.registerUser(email, password);
+    return await _repository.registerUser(email, password);
   }
 
   Future<Either<Failure, UserEntity>> loginUser(String email, String password) async {
-    return await repository.loginUser(email, password);
+    return await _repository.loginUser(email, password);
   }
 }

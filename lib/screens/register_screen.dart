@@ -19,8 +19,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
          top: false,
         child: Scaffold(
       backgroundColor: UIcolors.appWhite,
+      appBar: AppBar(
+        title: Text("Login").toMedium(),
+      ),
       body: Container(
-        margin: const EdgeInsets.only(left: 20, right: 20, top: 70),
+        margin: const EdgeInsets.only(left: 20, right: 20, top: 10),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -83,6 +86,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 text: 'Register',
               ),
               FooterTitleText(
+                onPressed: (){
+                  Navigator.pop(context);
+                },
                 text1: 'Sudah punya akun ?',
                 text2: "Login Sekarang",
                 leadingSubIcon:

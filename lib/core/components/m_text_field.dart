@@ -62,18 +62,7 @@ class _MtextFieldState extends State<MtextField>
     with SingleTickerProviderStateMixin {
   bool isFocused = false;
   bool isShowPassowrd = false;
-  TextEditingController? _textEditingController;
-
-  @override
-  void initState() {
-    if(widget.controller == null){
-      _textEditingController = TextEditingController();
-    }else{
-      _textEditingController = widget.controller;
-    }
-    super.initState();
-  }
-
+ 
   @override
   Widget build(BuildContext context) {
     
@@ -81,7 +70,7 @@ class _MtextFieldState extends State<MtextField>
     Widget textField = TextFormField(
       expands: widget.expands,
       enabled: widget.enabled,
-      controller: _textEditingController,
+      controller: widget.controller ?? TextEditingController(),
       onChanged: widget.onChanged,
       style: const TextStyle(fontFamily: "Gilroy", fontWeight: FontWeight.w600),
       textInputAction: widget.textInputAction,

@@ -35,13 +35,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   AppBar buildAppBar() {
     return AppBar(
-      leading: GestureDetector(
-        onTap: () {},
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SvgPicture.asset("assets/svg/dash_icons_menu.svg"),
-        ),
-      ),
+      leading: BackButton(),
       actions: [
         SvgPicture.asset("assets/svg/shopping-cart.svg"),
         10.horizontalSpace,

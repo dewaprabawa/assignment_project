@@ -7,8 +7,9 @@ class FooterTitleText extends StatelessWidget {
   final String text2;
   final Widget leadingSubIcon;
   final String subText;
+  final Function? onPressed;
   const FooterTitleText({
-    super.key, required this.text1, required this.text2, required this.leadingSubIcon, required this.subText,
+    super.key, required this.text1, required this.text2, required this.leadingSubIcon, required this.subText, this.onPressed,
   });
 
   @override
@@ -22,9 +23,16 @@ class FooterTitleText extends StatelessWidget {
           Text(text1).toMedium(
             color: UIcolors.appSoftGray
           ), 10.horizontalSpace,
-           Text(text2).toMedium(
-            color: UIcolors.appPrimary,fontWeight: FontWeight.w700
-          ), 10.horizontalSpace,
+          GestureDetector(
+            onTap: (){
+              if(onPressed != null){
+                onPressed!();
+              }
+            },
+             child: Text(text2).toMedium(
+              color: UIcolors.appPrimary,fontWeight: FontWeight.w700
+                     ),
+           ), 10.horizontalSpace,
           
         ],),
         15.verticalSpace,
