@@ -4,6 +4,10 @@ A Flutter project showcasing the implementation of Clean Architecture principles
 
 ![Screenshot](Screenshot%202023-11-24%20at%2012.03.07.png)
 
+## Download APK
+[Download the APK](https://drive.google.com/file/d/1GGK8ifLHi78hQdLWw9JOWQBuj2Y0t9hU/view?usp=sharing)
+
+
 ## Clean Architecture Overview
 
 Clean Architecture is a software design philosophy that promotes separation of concerns and maintainability by organizing code into distinct layers. The key components of Clean Architecture are:
